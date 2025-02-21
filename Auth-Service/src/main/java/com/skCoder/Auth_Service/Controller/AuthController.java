@@ -9,7 +9,7 @@ import com.skCoder.Auth_Service.Service.AuthService;
 import com.skCoder.Auth_Service.Service.JwtService;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/authv1")
 public class AuthController {
     
     @Autowired
@@ -30,6 +30,7 @@ public class AuthController {
 
     @GetMapping("/validate")
     public boolean validateToken(@RequestParam String token) {
+    	jwtService.printTokenInfo(token);
         return jwtService.validateToken(token);
     }
 }

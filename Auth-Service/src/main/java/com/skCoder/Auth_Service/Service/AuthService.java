@@ -18,7 +18,7 @@ public class AuthService {
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    // User Registration
+  
     public String register(String username, String password, Role role) {
         if (userRepository.findByUsername(username).isPresent()) {
             return "Username already taken!";
@@ -26,14 +26,14 @@ public class AuthService {
 
         User user = new User();
         user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password)); // Encrypt password
+        user.setPassword(passwordEncoder.encode(password)); 
         user.setRole(role);
 
         userRepository.save(user);
         return "User registered successfully!";
     }
 
-    // User Login & JWT Generation
+ 
     public String login(String username, String password) {
         Optional<User> userOpt = userRepository.findByUsername(username);
         if (userOpt.isEmpty()) {

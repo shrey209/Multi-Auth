@@ -11,12 +11,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Disable CSRF (optional)
+            .csrf(csrf -> csrf.disable()) // Disable CSRF for testing (enable in production)
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/auth/register").permitAll() // Allow public access
-                .requestMatchers("/auth/login").permitAll() // Allow login without authentication
-                .requestMatchers("/auth/validate").permitAll()
-                .anyRequest().authenticated() // Secure all other endpoints
+                .requestMatchers(
+                    "/auth/github/login",  // Returns GitHub OAuth URL
+                    "/auth/github/callback", // Handles GitHub OAuth callback (code exchange)
+                    "/authv1/register", "/authv1/login", "/authv1/validate" // Standard auth endpoints
+                ).permitAll() // Allow public access to these endpoints
+                .anyRequest().authenticated() // Secure all other requests
             );
 
         return http.build();
