@@ -1,5 +1,6 @@
 package com.skCoder.Auth_Service.Controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
@@ -7,6 +8,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.skCoder.Auth_Service.Models.User;
+import com.skCoder.Auth_Service.Service.AuthService;
 import com.skCoder.Auth_Service.Service.JwtUtil;
 
 import java.net.URI;
@@ -28,6 +31,9 @@ public class OAuthController {
     @Value("${frontend.redirect.uri}")
     private String frontendRedirectUri;
 
+    @Autowired
+    AuthService authService;
+    
     private final RestTemplate restTemplate = new RestTemplate();
 
     
@@ -63,9 +69,9 @@ public class OAuthController {
 
             String githubId = userInfo.get("id").toString();
             String username = (String) userInfo.get("login");
-
-       
-            String jwt = JwtUtil.generateToken(githubId, "USER");
+            User user=authService.registerOauthUser(username, "GITHUB");
+            
+            String jwt = JwtUtil.generateToken(username,user.getRoles(),user.getId());
             System.out.println("Generated JWT: " + jwt);
 
  

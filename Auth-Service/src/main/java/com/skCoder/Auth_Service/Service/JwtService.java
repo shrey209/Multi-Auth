@@ -16,7 +16,7 @@ public class JwtService {
     private static final String SECRET_KEY = "supersecretkey1234567890supersecretkey";
     private final SecretKey secretKey = Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
 
-    // Validate Token
+   
     public boolean validateToken(String token) {
         try {
       
@@ -30,7 +30,7 @@ public class JwtService {
         }
     }
 
-    // Extract All Claims from Token
+   
     public Map<String, Object> extractAllClaims(String token) {
         try {
             Claims claims = Jwts.parserBuilder()
