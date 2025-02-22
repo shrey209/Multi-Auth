@@ -31,6 +31,9 @@ public class User {
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();  
+    
+    @Column(nullable = true)
+    private boolean pending;
 
     public void addRole(Role role) {
         roles.add(role);

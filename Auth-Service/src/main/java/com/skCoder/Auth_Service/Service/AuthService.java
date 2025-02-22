@@ -21,22 +21,29 @@ public class AuthService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CaffeineCacheService cacheService;
+    
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
   
-    public String register(String username, String password, Role role) {
+    public String register(String username, String password,String email) {
         if (userRepository.findByUsername(username).isPresent()) {
             return "Username already taken!";
         }
+       
+    String otp=    cacheService.generateAndStoreOTP(email);
+        
 Set<Role>roles=new HashSet<>();
-        roles.add(role);
+        roles.add(Role.USER);
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password)); 
         user.setRoles(roles);
+        user.setPending(true);
         user.setProvider("LOCAL");
         userRepository.save(user);
-        return "User registered successfully!";
+        return otp;
     }
 
  
@@ -78,4 +85,19 @@ Set<Role>roles=new HashSet<>();
 
         return JwtUtil.generateToken(user.getUsername(), user.getRoles(),user.getId());
     }
+    
+    public String verifyOtp(String gmail, String otp) throws Exception {
+        String cacheOtp = cacheService.get(gmail);
+        
+        if (cacheOtp == null || !cacheOtp.equals(otp)) {
+            throw new Exception("Invalid OTP or the OTP may have expired.");
+        }
+        
+        User user = userRepository.findByEmail(gmail)
+                .orElseThrow(() -> new Exception("User not found for email: " + gmail));
+
+        return JwtUtil.generateToken(user.getUsername(), user.getRoles(), user.getId());
+    }
+
+
 }

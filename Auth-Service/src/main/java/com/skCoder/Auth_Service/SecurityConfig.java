@@ -16,7 +16,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/auth/github/login",  // Returns GitHub OAuth URL
                     "/auth/github/callback", // Handles GitHub OAuth callback (code exchange)
-                    "/authv1/register", "/authv1/login", "/authv1/validate" // Standard auth endpoints
+                    "/authv1/register", "/authv1/login", "/authv1/validate","/authv1/verify" // Standard auth endpoints
                     ,"/auth/google/callback","/auth/google/login"
                 ).permitAll() // Allow public access to these endpoints
                 .anyRequest().authenticated() // Secure all other requests
