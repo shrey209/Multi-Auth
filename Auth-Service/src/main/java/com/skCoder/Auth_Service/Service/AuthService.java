@@ -42,7 +42,11 @@ Set<Role>roles=new HashSet<>();
         user.setRoles(roles);
         user.setPending(true);
         user.setProvider("LOCAL");
-        userRepository.save(user);
+        user.setEmail(email);
+       
+        User user1= userRepository.save(user);
+       System.out.println(user1.toString());
+       
         return otp;
     }
 
@@ -86,9 +90,11 @@ Set<Role>roles=new HashSet<>();
         return JwtUtil.generateToken(user.getUsername(), user.getRoles(),user.getId());
     }
     
+    
+    
     public String verifyOtp(String gmail, String otp) throws Exception {
         String cacheOtp = cacheService.get(gmail);
-        
+        System.out.println(cacheOtp+"cahced");
         if (cacheOtp == null || !cacheOtp.equals(otp)) {
             throw new Exception("Invalid OTP or the OTP may have expired.");
         }

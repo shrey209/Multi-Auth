@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.skCoder.Auth_Service.Models.LoginRequest;
 import com.skCoder.Auth_Service.Models.RegisterRequest;
+import com.skCoder.Auth_Service.Models.VerifyDTO;
 import com.skCoder.Auth_Service.Service.AuthService;
 import com.skCoder.Auth_Service.Service.CaffeineCacheService;
 import com.skCoder.Auth_Service.Service.EmailService;
@@ -32,6 +33,7 @@ public class AuthController {
     @PostMapping("/register")
     public String register(@RequestBody RegisterRequest request) {
       String otp=   authService.register(request.getUsername(), request.getPassword(),request.getGmail());
+      System.out.println(otp);
       emailService.sendEmail(request.getGmail(), "otp verification", "Your otp is ->"+otp);  
          return "verify the otp to confirm registration";
     }
@@ -47,11 +49,11 @@ public class AuthController {
         return jwtService.validateToken(token);
     }
     
-    @GetMapping("verify")
-    public ResponseEntity<?> verify(@RequestParam String otp, @RequestParam String gmail) {
+    @PostMapping("/verify")
+    public ResponseEntity<?> verify(@RequestBody  VerifyDTO verifyDTO) {
         try {
-            String token = authService.verifyOtp(gmail, otp);
-            return ResponseEntity.ok(token);  // Return 200 with token
+            String token = authService.verifyOtp(verifyDTO.getEmail(), verifyDTO.getOtp());
+            return ResponseEntity.ok(token);  
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }

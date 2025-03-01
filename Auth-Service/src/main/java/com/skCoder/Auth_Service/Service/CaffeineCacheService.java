@@ -13,7 +13,7 @@ public class CaffeineCacheService {
 
     public CaffeineCacheService() {
         this.cache = Caffeine.newBuilder()
-                .expireAfterWrite(3, TimeUnit.MINUTES) 
+                .expireAfterWrite(5, TimeUnit.MINUTES) 
                 .maximumSize(100) 
                 .build();
     }

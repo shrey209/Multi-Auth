@@ -42,4 +42,10 @@ public class User {
     public void removeRole(Role role) {
         roles.remove(role);
     }
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", provider=" + provider
+				+ ", email=" + email + ", roles=" + roles + ", pending=" + pending + "]";
+	}
 }
